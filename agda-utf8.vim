@@ -124,7 +124,7 @@ imap <buffer> <LocalLeader>int ∫
 imap <buffer> <LocalLeader>intersect ∩
 imap <buffer> <LocalLeader>iso ≅
 imap <buffer> <LocalLeader>join ⋈
-imap <buffer> <LocalLeader>land ∧
+imap <buffer> <LocalLeader>and ∧
 imap <buffer> <LocalLeader>langle ⟨
 imap <buffer> <LocalLeader>lbrac ⟦
 imap <buffer> <LocalLeader>[[ ⟦
@@ -139,7 +139,7 @@ imap <buffer> <LocalLeader>llangle ⟪
 imap <buffer> <LocalLeader>longto ⟶ 
 imap <buffer> <LocalLeader>-- ⟶ 
 imap <buffer> <LocalLeader>– ⟶ 
-imap <buffer> <LocalLeader>lor ∨
+imap <buffer> <LocalLeader>or ∨
 imap <buffer> <LocalLeader>lower ⌈⌉<left>
 imap <buffer> <LocalLeader>ceil ⌈⌉<left>
 imap <buffer> <LocalLeader>lub ⊔
@@ -540,7 +540,7 @@ cmap <buffer> <LocalLeader>int ∫
 cmap <buffer> <LocalLeader>intersect ∩
 cmap <buffer> <LocalLeader>iso ≅
 cmap <buffer> <LocalLeader>join ⋈
-cmap <buffer> <LocalLeader>land ∧
+cmap <buffer> <LocalLeader>and ∧
 cmap <buffer> <LocalLeader>langle ⟨
 cmap <buffer> <LocalLeader>lbrac ⟦
 cmap <buffer> <LocalLeader>[[ ⟦
@@ -555,7 +555,7 @@ cmap <buffer> <LocalLeader>llangle ⟪
 cmap <buffer> <LocalLeader>longto ⟶ 
 cmap <buffer> <LocalLeader>-- ⟶ 
 cmap <buffer> <LocalLeader>– ⟶ 
-cmap <buffer> <LocalLeader>lor ∨
+cmap <buffer> <LocalLeader>or ∨
 cmap <buffer> <LocalLeader>lower ⌈⌉<left>
 cmap <buffer> <LocalLeader>ceil ⌈⌉<left>
 cmap <buffer> <LocalLeader>lub ⊔
