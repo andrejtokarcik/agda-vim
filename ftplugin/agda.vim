@@ -38,6 +38,12 @@ if !exists("g:agdavim_includeutf8_mappings") || g:agdavim_includeutf8_mappings
     runtime agda-utf8.vim
 endif
 
+if !exists("g:agdavim_enable_goto_definition")
+    let g:agdavim_enable_goto_definition = 1
+endif
+
+set efm=\ \ /%\\&%f:%l\\,%c-%.%#,%E/%\\&%f:%l\\,%c-%.%#,%Z,%C%m,%-G%.%#
+
 " Python 3 is NOT supported.  This code and other changes are left here to
 " ease adding future Python 3 support.  Right now the main issue is that
 " Python 3 treats strings are sequences of characters rather than sequences of
@@ -136,6 +142,7 @@ def RestartAgda():
 RestartAgda()
 
 goals = {}
+annotations = []
 
 agdaVersion = None
 
@@ -216,7 +223,7 @@ def getOutput():
 
 def parseVersion(versionString):
     global agdaVersion
-    agdaVersion = [int(c) for c in versionString[12:].rsplit('-', 1)[0].split('.')]
+    agdaVersion = [int(c) for c in versionString[12:].split('-')[0].split('.')]
     agdaVersion = agdaVersion + [0]*max(0, 4-len(agdaVersion))
 
 HOLE = '?'
@@ -226,6 +233,53 @@ def introduceInteractionPoint(s, substrLeft, substrRight=None):
     if substrRight:
         s = s.replace(HOLE + substrRight, INTERACTION + substrRight)
     return s
+
+# This is not very efficient presumably.
+def c2b(n):
+    return int(vim.eval('byteidx(join(getline(1, "$"), "\n"),%d)' % n))
+
+# See https://github.com/agda/agda/blob/323f58f9b8dad239142ed1dfa0c60338ea2cb157/src/data/emacs-mode/annotation.el#L112
+def parseAnnotation(spans):
+    global annotations
+    anns = re.findall(r'\((\d+) (\d+) \([^\)]*\) \w+ \(\"([^"]*)\" \. (\d+)\)\)', spans)
+    # TODO: This is assumed to be in sorted order.
+    for ann in anns:
+        annotations.append([c2b(int(ann[0])-1), c2b(int(ann[1])-1), ann[2], c2b(int(ann[3]))])
+
+def searchAnnotation(lo, hi, idx):
+    global annotations
+
+    if hi == 0: return None
+
+    while hi - lo > 1:
+        mid = lo + (hi - lo) // 2
+        midOffset = annotations[mid][0]
+        if idx < midOffset:
+            hi = mid
+        else:
+            lo = mid
+
+    (loOffset, hiOffset) = annotations[lo][0:2]
+    if idx > loOffset and idx <= hiOffset:
+        return annotations[lo][2:4]
+    else:
+        return None
+
+def gotoAnnotation():
+    global annotations
+    byteOffset = int(vim.eval('line2byte(line(".")) + col(".") - 1'))
+    result = searchAnnotation(0, len(annotations), byteOffset)
+    if result is None: return
+    (file, pos) = result
+    targetBuffer = None
+    for buffer in vim.buffers:
+        if buffer.name == file: targetBuffer = buffer.number
+
+    if targetBuffer is None:
+        vim.command('edit %s' % file)
+    else:
+        vim.command('buffer %s' % targetBuffer)
+    vim.command('%dgo' % pos)
 
 def interpretResponse(responses, quiet = False):
     for response in responses:
@@ -293,6 +347,10 @@ def interpretResponse(responses, quiet = False):
             response = introduceInteractionPoint(response, ' ', ' ')
             match = re.search(r'(\d+)\s+"((?:[^"\\]|\\.)*)"', response[19:])
             replaceHole(unescape(match.group(2)))
+        # elif response.startswith('(agda2-highlight-clear)'):
+            # pass # Maybe do something with this.
+        elif response.startswith('(agda2-highlight-add-annotations '):
+            parseAnnotation(response)
         else:
             pass # print(response)
 
@@ -300,8 +358,11 @@ def sendCommand(arg, quiet=False):
     vim.command('silent! noautocmd write')
     f = vim.current.buffer.name
     # The x is a really hacky way of getting a consistent final response.  Namely, "cannot read"
-    agda.stdin.write('IOTCM "%s" None Indirect (%s)\nx\n' % (escape(f), arg))
+    agda.stdin.write('IOTCM "%s" None Direct (%s)\nx\n' % (escape(f), arg))
     interpretResponse(getOutput(), quiet)
+
+def sendCommandLoadHighlightInfo(file, quiet):
+    sendCommand('Cmd_load_highlighting_info "%s"' % escape(file), quiet = quiet)
 
 def sendCommandLoad(file, quiet):
     global agdaVersion
@@ -375,6 +436,23 @@ exec s:python_until_eof
 import vim
 f = vim.current.buffer.name
 sendCommandLoad(f, int(vim.eval('a:quiet')) == 1)
+if int(vim.eval('g:agdavim_enable_goto_definition')) == 1:
+    sendCommandLoadHighlightInfo(f, int(vim.eval('a:quiet')) == 1)
+EOF
+endfunction
+
+function! LoadHighlightInfo(quiet)
+exec s:python_until_eof
+import vim
+f = vim.current.buffer.name
+sendCommandLoadHighlightInfo(f, int(vim.eval('a:quiet')) == 1)
+EOF
+endfunction
+
+function! GotoAnnotation()
+exec s:python_until_eof
+import vim
+gotoAnnotation()
 EOF
 endfunction
 
@@ -439,7 +517,10 @@ if result is None:
 elif result[1] is None:
     print("Goal not loaded")
 else:
-    sendCommand('Cmd_auto %d noRange "%s"' % (result[1], escape(result[0])))
+    if agdaVersion < [2,6,0,0]:
+        sendCommand('Cmd_auto %d noRange "%s"' % (result[1], escape(result[0]) if result[0] != "?" else ""))
+    else:
+        sendCommand('Cmd_autoOne %d noRange "%s"' % (result[1], escape(result[0]) if result[0] != "?" else ""))
 EOF
 endfunction
 
@@ -612,11 +693,12 @@ nnoremap <buffer> <LocalLeader>N :call Normalize("DefaultCompute")<CR>
 nnoremap <buffer> <LocalLeader>M :call ShowModule('')<CR>
 nnoremap <buffer> <LocalLeader>y :call WhyInScope('')<CR>
 nnoremap <buffer> <LocalLeader>h :call HelperFunction()<CR>
+nnoremap <buffer> <LocalLeader>d :call GotoAnnotation()<CR>
 nnoremap <buffer> <LocalLeader>m :Metas<CR>
 
 " Insert a skeleton definition for a function
 " TODO indent the definition to the same level as the type
-" FIXME doesn't work if type decl at the last line of file
+" FIXME doesn't work with type signature located at last line
 nnoremap <buffer> <LocalLeader>d ^yW}O<c-o>p= ?<esc>:call MakeCase(0)<cr>
 
 " Paste the contents from a copy action (e.g., a helper function's type)
