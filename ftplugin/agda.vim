@@ -136,9 +136,13 @@ import subprocess
 # start Agda
 # TODO: I'm pretty sure this will start an agda process per buffer which is less than desirable...
 agda = None
-def RestartAgda():
+def RestartAgda(version=''):
     global agda
-    agda = subprocess.Popen(["agda", "--interaction"], bufsize = 1, stdin = subprocess.PIPE, stdout = subprocess.PIPE, universal_newlines = True)
+    if agda is not None:
+      agda.terminate()
+    binary = '-'.join(['agda', version]).rstrip('-')
+    agda = subprocess.Popen([binary, '--interaction'], bufsize = 1, stdin = subprocess.PIPE, stdout = subprocess.PIPE, universal_newlines = True)
+
 RestartAgda()
 
 goals = {}
@@ -664,7 +668,8 @@ endfunction
 command! -nargs=0 Load call Load(0)
 command! -nargs=0 AgdaVersion call AgdaVersion(0)
 command! -nargs=0 Reload silent! call Load(1) | Metas
-command! -nargs=0 RestartAgda exec s:python_cmd 'RestartAgda()'
+command! -nargs=0 RestartAgda exec s:python_cmd "RestartAgda()"
+command! -nargs=1 RestartAgdaVersion exec s:python_cmd "RestartAgda('<args>')"
 command! -nargs=0 ShowImplicitArguments exec s:python_cmd "sendCommand('ShowImplicitArgs True')"
 command! -nargs=0 HideImplicitArguments exec s:python_cmd "sendCommand('ShowImplicitArgs False')"
 command! -nargs=0 ToggleImplicitArguments exec s:python_cmd "sendCommand('ToggleImplicitArgs')"
