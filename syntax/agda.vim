@@ -21,9 +21,9 @@ endif
 "   agdaInfixFunction
 
 syn match   agdaKeywords     "\v(^|\s|[.(){};])@<=(abstract|data|hiding|import|as|infix|infixl|infixr|module|mutual|open|primitive|private|public|record|renaming|rewrite|using|where|with|field|constructor|instance|syntax|pattern|inductive|coinductive)($|\s|[.(){};])@="
-syn match   agdaKeywords     "\v(^|\s|[.(){};])@<=(postulate|variable|codata)($|\s|[.(){};])@="
+syn match   agdaKeywords     "\v(^|\s|[.(){};])@<=(postulate|variable|codata|macro)($|\s|[.(){};])@="
 syn match   agdaOperator     "\v(^|\s|[.(){};])@<=(let|in|forall|λ|→|-\>|:|∀|\=|\||\\)($|\s|[.(){};])@="
-syn match   agdaFunction     "\v(^|\s|[.(){};])@<=(Set[0-9₀-₉]*)($|\s|[.(){};])@="
+syn match   agdaFunction     "\v(^|\s|[.(){};])@<=((Set|Prop)[0-9₀-₉]*)($|\s|[.(){};])@="
 syn match   agdaNumber       "\v(^|\s|[.(){};])@<=-?[0-9]+($|\s|[.(){};])@="
 syn match   agdaCharCode     contained "\\\([0-9]\+\|o[0-7]\+\|x[0-9a-fA-F]\+\|[\"\\'&\\abfnrtv]\|^[A-Z^_\[\\\]]\)"
 syn match   agdaCharCode     contained "\v\\(NUL|SOH|STX|ETX|EOT|ENQ|ACK|BEL|BS|HT|LF|VT|FF|CR|SO|SI|DLE|DC1|DC2|DC3|DC4|NAK|SYN|ETB|CAN|EM|SUB|ESC|FS|GS|RS|US|SP|DEL)"
@@ -34,10 +34,11 @@ syn region  agdaX            matchgroup=agdaHole start="{!" end="!}" contains=AL
 syn match   agdaLineComment  "\v(^|\s|[.(){};])@<=--.*$" contains=@agdaInComment
 syn region  agdaBlockComment start="{-"  end="-}" contains=agdaBlockComment,@agdaInComment
 syn region  agdaPragma       start="{-#" end="#-}"
-syn cluster agdaInComment    contains=agdaTODO,agdaFIXME,agdaXXX
+syn cluster agdaInComment    contains=agdaTODO,agdaFIXME,agdaXXX,agdaNOTE
 syn keyword agdaTODO         contained TODO
 syn keyword agdaFIXME        contained FIXME
 syn keyword agdaXXX          contained XXX
+syn keyword agdaNOTE         contained NOTE
 
 hi def link agdaNumber           Number
 hi def link agdaString           String
@@ -57,3 +58,4 @@ hi def link agdaPragma           Comment
 hi def link agdaTODO             Todo
 hi def link agdaFIXME            Todo
 hi def link agdaXXX              Todo
+hi def link agdaNOTE             Todo

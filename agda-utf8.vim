@@ -53,6 +53,7 @@ imap <buffer> <LocalLeader>throughshortmid  ⃓
 imap <buffer> <LocalLeader>througho  ⃘
 
 " Math
+imap <buffer> <LocalLeader>// ∥
 imap <buffer> <LocalLeader>{{ ⦃
 imap <buffer> <LocalLeader>}} ⦄
 imap <buffer> <LocalLeader>: ∶
@@ -63,6 +64,7 @@ imap <buffer> <LocalLeader>=? ≟
 imap <buffer> <LocalLeader>all ∀
 imap <buffer> <LocalLeader>always □
 imap <buffer> <LocalLeader>approx ≈
+imap <buffer> <LocalLeader>B 𝔹
 imap <buffer> <LocalLeader>bot ⊥
 imap <buffer> <LocalLeader>box □
 imap <buffer> <LocalLeader>boxdot ⊡
@@ -75,7 +77,7 @@ imap <buffer> <LocalLeader>boxtimes ⊠
 imap <buffer> <LocalLeader>box* ⊠
 imap <buffer> <LocalLeader>bul •
 imap <buffer> <LocalLeader>C ℂ
-imap <buffer> <LocalLeader>cdot ∙
+imap <buffer> <LocalLeader>cdot ·
 imap <buffer> <LocalLeader>. ∙
 imap <buffer> <LocalLeader>cdots ⋯
 imap <buffer> <LocalLeader>check ✓
@@ -253,7 +255,7 @@ imap <buffer> <LocalLeader>updown ↕
 imap <buffer> <LocalLeader>ud ↕
 imap <buffer> <LocalLeader>unfold ⦉⦊<left>
 imap <buffer> <LocalLeader><\| ⦉
-imap <buffer> <LocalLeader>\|> ⦊
+imap <buffer> <LocalLeader>\|> ▷
 imap <buffer> <LocalLeader>up;down ⇅
 imap <buffer> <LocalLeader>u;d ⇅
 imap <buffer> <LocalLeader>uptri ▲
@@ -268,7 +270,7 @@ imap <buffer> <LocalLeader>No ✘
 imap <buffer> <LocalLeader>Z ℤ
 
 " Not math
-imap <buffer> <LocalLeader>sec §
+imap <buffer> <LocalLeader>para §
 
 " Superscripts
 imap <buffer> <LocalLeader>^0 ⁰
@@ -469,6 +471,7 @@ cmap <buffer> <LocalLeader>throughshortmid  ⃓
 cmap <buffer> <LocalLeader>througho  ⃘
 
 " Math
+cmap <buffer> <LocalLeader>// ∥
 cmap <buffer> <LocalLeader>{{ ⦃
 cmap <buffer> <LocalLeader>}} ⦄
 cmap <buffer> <LocalLeader>: ∶
@@ -479,6 +482,7 @@ cmap <buffer> <LocalLeader>=? ≟
 cmap <buffer> <LocalLeader>all ∀
 cmap <buffer> <LocalLeader>always □
 cmap <buffer> <LocalLeader>approx ≈
+cmap <buffer> <LocalLeader>B 𝔹
 cmap <buffer> <LocalLeader>bot ⊥
 cmap <buffer> <LocalLeader>box □
 cmap <buffer> <LocalLeader>boxdot ⊡
@@ -491,7 +495,7 @@ cmap <buffer> <LocalLeader>boxtimes ⊠
 cmap <buffer> <LocalLeader>box* ⊠
 cmap <buffer> <LocalLeader>bul •
 cmap <buffer> <LocalLeader>C ℂ
-cmap <buffer> <LocalLeader>cdot ∙
+cmap <buffer> <LocalLeader>cdot ·
 cmap <buffer> <LocalLeader>. ∙
 cmap <buffer> <LocalLeader>cdots ⋯
 cmap <buffer> <LocalLeader>check ✓
@@ -669,7 +673,7 @@ cmap <buffer> <LocalLeader>updown ↕
 cmap <buffer> <LocalLeader>ud ↕
 cmap <buffer> <LocalLeader>unfold ⦉⦊<left>
 cmap <buffer> <LocalLeader><\| ⦉
-cmap <buffer> <LocalLeader>\|> ⦊
+cmap <buffer> <LocalLeader>\|> ▷
 cmap <buffer> <LocalLeader>up;down ⇅
 cmap <buffer> <LocalLeader>u;d ⇅
 cmap <buffer> <LocalLeader>uptri ▲
@@ -684,7 +688,7 @@ cmap <buffer> <LocalLeader>No ✘
 cmap <buffer> <LocalLeader>Z ℤ
 
 " Not math
-cmap <buffer> <LocalLeader>sec §
+cmap <buffer> <LocalLeader>para §
 
 " Superscripts
 cmap <buffer> <LocalLeader>^0 ⁰
