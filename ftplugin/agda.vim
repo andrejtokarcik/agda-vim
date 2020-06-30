@@ -1,6 +1,7 @@
 "setlocal iskeyword=33-126,192-255
 setlocal commentstring=--\ %s
 setlocal comments=s1fl:{-,mb:\ \ ,ex:-},:--
+setlocal wildignore+=*.agdai
 
 " The ReloadSyntax function is reproduced from
 " http://wiki.portal.chalmers.se/agda/pmwiki.php?n=Main.VIMEditing
@@ -141,7 +142,8 @@ def RestartAgda(version=''):
     if agda is not None:
       agda.terminate()
     binary = '-'.join(['agda', version]).rstrip('-')
-    agda = subprocess.Popen([binary, '--interaction'], bufsize = 1, stdin = subprocess.PIPE, stdout = subprocess.PIPE, universal_newlines = True)
+    agda = subprocess.Popen([binary, '--interaction', '--postfix-projections'],
+                            bufsize=1, stdin=subprocess.PIPE, stdout=subprocess.PIPE, universal_newlines=True)
 
 RestartAgda()
 
@@ -150,7 +152,7 @@ annotations = []
 
 agdaVersion = None
 
-DEFAULT_REWRITE_MODE = "Simplified"
+DEFAULT_REWRITE_MODE = "AsIs"
 rewriteMode = DEFAULT_REWRITE_MODE
 
 def setRewriteMode(mode):
